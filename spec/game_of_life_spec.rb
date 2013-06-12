@@ -8,8 +8,6 @@ describe 'Game of life' do
     let(:width) { 5 }
     let(:world) { World.new height, width }
 
-
-
     subject { world }
 
     its(:height) { should == 4 }
@@ -137,35 +135,45 @@ describe 'Game of life' do
     end
 
     describe 'seed' do
-      subject { World.seed("....\n....\n....") }
-      its(:height){should == 3}
-      its(:width){should == 4}
+
+      describe 'empty game' do
+        let(:height) { 3 }
+        let(:width) { 4 }
+        subject { world }
+        its(:height){should == height}
+        its(:width){should == width}
+        let(:world) { World.seed("....\n....\n....") }
+        it 'should have all dead cells' do
+          height.times do |r|
+            width.times do |c|
+              world.alive?(r,c).should == false
+            end
+          end
+        end
+      end
+
+      describe 'populated game' do
+        let(:height) { 3 }
+        let(:width) { 4 }
+        let(:world) { World.seed("o...\n.o..\n...o") }
+        it { world.alive?(0,0).should == true }
+        it { world.alive?(1,1).should == true }
+        it { world.alive?(2,3).should == true }
+      end
+
     end
 
     describe 'run' do
 
       describe 'block' do
-        let(:block_pattern_world) do
-          World.new(4,5).tap do |w|
-            w.live! 0,0
-            w.live! 0,1
-            w.live! 1,0
-            w.live! 1,1
-          end
-        end
-        it { block_pattern_world.run(4).display.should == "oo...\noo...\n.....\n.....\n" }
+        let(:block_pattern_world) { World.seed "oo...\noo...\n....." }
+        it { block_pattern_world.run(4).display.should == "oo...\noo...\n.....\n" }
       end
     end
 
     describe 'blinker' do
-      let(:blinker_pattern) do
-        World.new(4,5).tap do |w|
-          w.live! 0,1
-          w.live! 1,1
-          w.live! 2,1
-        end
-      end
-      it { blinker_pattern.run(5).display.should == ".....\nooo..\n.....\n.....\n" }
+      let(:blinker_pattern) { World.seed ".o..\n.o..\n.o..\n..." }
+      it { blinker_pattern.run(5).display.should == "....\nooo.\n....\n....\n" }
     end
 
   end

@@ -4,7 +4,13 @@ class World
 
   def self.seed(game)
     rows = game.split "\n"
-    World.new(rows.length, rows[0].length)
+    world = World.new(rows.length, rows[0].length)
+    rows.length.times do |r|
+      rows[r].length.times do |c|
+        world.live! r,c if rows[r][c] == 'o'
+      end
+    end
+    world
   end
 
   def initialize(height, width)
