@@ -8,6 +8,8 @@ describe 'Game of life' do
     let(:width) { 5 }
     let(:world) { World.new height, width }
 
+
+
     subject { world }
 
     its(:height) { should == 4 }
@@ -15,6 +17,10 @@ describe 'Game of life' do
 
     describe 'default cell state' do
       it { world.alive?(0,0).should == false }
+    end
+
+    describe '#index' do
+      it { world.index(1,0).should == 5 }
     end
 
     describe 'live!' do
@@ -30,7 +36,6 @@ describe 'Game of life' do
     describe '#neighbors' do
 
       describe 'max neighbors' do
-
         before do
           height.times do |h|
             width.times do |w|
@@ -40,15 +45,15 @@ describe 'Game of life' do
         end
 
         describe 'corner cell' do
-          it { world.living_neighbors(0,0).should == 2 }
+          it { world.living_neighbors(0,0).should == 3 }
         end
 
         describe 'edge cell' do
-          it { world.living_neighbors(0,1).should == 3 }
+          it { world.living_neighbors(0,1).should == 5 }
         end
 
         describe 'middle cell' do
-          it { world.living_neighbors(1,1).should == 4 }
+          it { world.living_neighbors(1,1).should == 8 }
         end
 
       end
@@ -130,5 +135,32 @@ describe 'Game of life' do
         it { world.display.should == ".....\n.o...\n.....\n....o\n" }
       end
     end
+
+    describe 'run' do
+
+      describe 'block' do
+        let(:block_pattern_world) do
+          World.new(4,5).tap do |w|
+            w.live! 0,0
+            w.live! 0,1
+            w.live! 1,0
+            w.live! 1,1
+          end
+        end
+        it { block_pattern_world.run(4).display.should == "oo...\noo...\n.....\n.....\n" }
+      end
+    end
+
+    describe 'blinker' do
+      let(:blinker_pattern) do
+        World.new(4,5).tap do |w|
+          w.live! 0,1
+          w.live! 1,1
+          w.live! 2,1
+        end
+      end
+      it { blinker_pattern.run(5).display.should == ".....\nooo..\n.....\n.....\n" }
+    end
+
   end
 end

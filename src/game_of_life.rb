@@ -8,7 +8,6 @@ class World
     self.cells = Array.new height * width
   end
 
-
   def dead?(row, col)
     !alive? row, col
   end
@@ -18,7 +17,7 @@ class World
   end
 
   def live!(row, col)
-    cells[index row, col] = :alive
+    cells[index(row, col)] = :alive
   end
 
   def over_populated?(row, col)
@@ -30,7 +29,7 @@ class World
   end
 
   def overpopulated?(row,col)
-    alive?(row, col) and living_neighbors(row, col) == 4
+    alive?(row, col) and living_neighbors(row, col) > 3
   end
 
   def reproduces?(row, col)
@@ -39,9 +38,9 @@ class World
 
   def next_generation
     World.new(height, width).tap do |world|
-      height.times do |h|
-        width.times do |w|
-          world.live!(h,w) if surviving?(h,w) or reproduces?(h,w)
+      height.times do |r|
+        width.times do |c|
+          world.live!(r,c) if surviving?(r,c) or reproduces?(r,c)
         end
       end
     end
@@ -62,9 +61,17 @@ class World
     s.join
   end
 
+  def run(iterations)
+    w = self
+    iterations.times do
+      w = w.next_generation
+    end
+    w
+  end
+
 
   def cell(row, col)
-    cells[index row, col]
+    cells[index(row, col)]
   end
 
   def living_neighbors(row, col)
@@ -75,28 +82,66 @@ class World
     [above(row, col),
      left(row, col),
      right(row, col),
-    below(row, col)]
+    below(row, col),
+    upper_left(row, col),
+    upper_right(row, col),
+    lower_left(row, col),
+    lower_right(row, col)]
   end
 
   def index(row, col)
-    row * height + col
+    (row * width) + col
   end
 
   def above(row, col)
-    cell(row-1, col) unless row == 0
+    cell(row-1, col) if above? row
   end
 
   def below(row, col)
-    cell(row+1,col) unless row == @height - 1
+    cell(row+1,col) if below? row
   end
 
   def left(row, col)
-    cell(row, col-1) unless col == 0
+    cell(row, col-1) if left? col
   end
 
   def right(row, col)
-    cell(row, col+1) unless col == @width - 1
+    cell(row, col+1) if right? col
   end
+
+  def lower_left(row, col)
+    cell(row+1, col-1) if left?(col) and below?(row)
+  end
+
+  def lower_right(row, col)
+    cell(row+1, col+1) if right?(col) and below?(row)
+  end
+
+  def upper_left(row, col)
+    cell(row-1, col-1) if left?(col) and above?(row)
+  end
+
+  def upper_right(row, col)
+    cell(row-1, col+1) if right?(col) and above?(row)
+  end
+
+  def below?(row)
+    row < height-1
+  end
+
+  def above?(row)
+    row > 0
+  end
+
+  def left?(col)
+    col > 0
+  end
+
+  def right?(col)
+    col < width - 1
+  end
+
+
 
 
 end
