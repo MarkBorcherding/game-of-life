@@ -89,7 +89,7 @@ describe 'Game of life' do
       end
     end
 
-    describe 'dies' do
+    describe 'overpopulated' do
       before do
         world.live! 0,1
         world.live! 1,0
@@ -97,7 +97,7 @@ describe 'Game of life' do
         world.live! 1,2
         world.live! 2,1
       end
-      it { world.dies?(1,1).should == true }
+      it { world.overpopulated?(1,1).should == true }
     end
 
     describe 'reporoduces' do
@@ -109,6 +109,12 @@ describe 'Game of life' do
       it { world.reproduces?(0,1).should == true }
     end
 
-  end
+    describe 'next_generation' do
+      let(:next_generation) { world.next_generation }
+      subject {next_generation}
 
+      its(:height) { should == world.height }
+      its(:width) { should == world.width }
+    end
+  end
 end

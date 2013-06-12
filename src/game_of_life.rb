@@ -29,12 +29,22 @@ class World
     alive?(row, col) and living_neighbors(row, col).between?(2,3)
   end
 
-  def dies?(row,col)
+  def overpopulated?(row,col)
     alive?(row, col) and living_neighbors(row, col) == 4
   end
 
   def reproduces?(row, col)
     dead?(row, col) and living_neighbors(row, col) == 3
+  end
+
+  def next_generation
+    World.new(height, width).tap do |world|
+      height.times do |h|
+        width.times do |w|
+          world.live!(h,w) if surviving?(h,w) or reproduces?(h,w)
+        end
+      end
+    end
   end
 
   def cell(row, col)
