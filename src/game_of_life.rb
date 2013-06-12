@@ -47,6 +47,22 @@ class World
     end
   end
 
+  def display
+    s = []
+    height.times do |r|
+      width.times do |c|
+        if alive? r,c
+          s.push 'o'
+        else
+          s.push '.'
+        end
+      end
+      s.push "\n"
+    end
+    s.join
+  end
+
+
   def cell(row, col)
     cells[index row, col]
   end

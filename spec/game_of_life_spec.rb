@@ -116,5 +116,19 @@ describe 'Game of life' do
       its(:height) { should == world.height }
       its(:width) { should == world.width }
     end
+
+    describe 'displaying' do
+      describe 'an empty world' do
+        it { world.display.should == ".....\n.....\n.....\n.....\n" }
+      end
+
+      describe 'a populated world' do
+        before do
+          world.live! 1,1
+          world.live! 3,4
+        end
+        it { world.display.should == ".....\n.o...\n.....\n....o\n" }
+      end
+    end
   end
 end
