@@ -136,6 +136,12 @@ describe 'Game of life' do
       end
     end
 
+    describe 'seed' do
+      subject { World.seed("....\n....\n....") }
+      its(:height){should == 3}
+      its(:width){should == 4}
+    end
+
     describe 'run' do
 
       describe 'block' do

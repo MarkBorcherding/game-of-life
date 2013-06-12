@@ -2,6 +2,11 @@ class World
 
   attr_accessor :height, :width, :cells
 
+  def self.seed(game)
+    rows = game.split "\n"
+    World.new(rows.length, rows[0].length)
+  end
+
   def initialize(height, width)
     self.height = height
     self.width = width
