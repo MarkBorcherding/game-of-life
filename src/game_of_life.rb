@@ -1,5 +1,8 @@
 class World
 
+  ALIVE = 'o'
+  DEAD = '.'
+
   attr_accessor :height, :width, :cells
 
   def self.seed(game)
@@ -7,7 +10,7 @@ class World
     world = World.new(rows.length, rows[0].length)
     rows.length.times do |r|
       rows[r].length.times do |c|
-        world.live! r,c if rows[r][c] == 'o'
+        world.live! r,c if rows[r][c] == ALIVE
       end
     end
     world
@@ -62,9 +65,9 @@ class World
     height.times do |r|
       width.times do |c|
         if alive? r,c
-          s.push 'o'
+          s.push ALIVE
         else
-          s.push '.'
+          s.push DEAD
         end
       end
       s.push "\n"
