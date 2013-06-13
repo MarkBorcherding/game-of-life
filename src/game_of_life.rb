@@ -86,10 +86,10 @@ class World
   end
 
   def living_neighbors(row, col)
-    neightbors(row, col).count { |cell| cell == :alive }
+    neighbors(row, col).count { |cell| cell == :alive }
   end
 
-  def neightbors(row, col)
+  def neighbors(row, col)
     [above(row, col),
      left(row, col),
      right(row, col),
